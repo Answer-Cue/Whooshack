@@ -1,11 +1,9 @@
-import modules.client
+import streamlit as st
+from ui.components import header, input_area
+from logic.calc import add
 
+st.set_page_config(layout="wide")
 
-import WhooPy as whoo
-
-client=whoo.Client()
-# ログイン
-data=client.email_login(
-    email="example@example.com", # メールアドレス
-    password="password" # パスワード
-)
+header()
+x, y = input_area()
+st.write(add(x, y))
