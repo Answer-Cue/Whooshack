@@ -1,9 +1,12 @@
 import streamlit as st
 from ui.components import header, input_area
-from logic.calc import add
 
-st.set_page_config(layout="wide")
+st.set_page_config(page_title="My App")
 
 header()
-x, y, z = input_area()
-st.write(x, y, z)
+
+email, password, extras = input_area()
+
+st.write("email:", email)
+st.write("password:", password)
+st.write("extras:", extras)
