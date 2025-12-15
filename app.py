@@ -5,5 +5,5 @@ from logic.calc import add
 st.set_page_config(layout="wide")
 
 header()
-x, y = input_area()
-st.write(add(x, y))
+x, y, z = input_area()
+st.write(x, y, z)
