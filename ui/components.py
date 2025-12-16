@@ -1,7 +1,7 @@
 import streamlit as st
 
 def header():
-    st.title("ログイン画面")
+    st.title("whooLog")
     st.caption("Streamlit UI サンプル")
 
 def input_area():
