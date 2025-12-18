@@ -24,11 +24,11 @@ def input_area():
 
     if show_extra:
         st.subheader("変更入力")
-        lat = st.text_input("緯度", key="lat")
-        lon = st.text_input("経度", key="lon")
-        stayed_at = st.text_input("滞在時間", key="stayed_at")
-        battery_level = st.text_input("バッテリー残量", key="battery_level")
-        speed = st.text_input("移動スピード", key="speed")
+        lat = st.text_input("緯度", value=st.session_state["lat"], key="lat")
+        lon = st.text_input("経度", value=st.session_state["lon"], key="lon")
+        stayed_at = st.text_input("滞在時間", value=st.session_state["stayed_at"], key="stayed_at")
+        battery_level = st.text_input("バッテリー残量", value=st.session_state["battery_level"], key="battery_level")
+        speed = st.text_input("移動スピード", value=st.session_state["speed"], key="speed")
     else:
         lat = st.session_state["lat"]
         lon = st.session_state["lon"]
@@ -45,3 +45,4 @@ def input_area():
     }
 
     return email, password, extras, show_extra
+
