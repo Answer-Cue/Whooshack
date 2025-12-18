@@ -10,7 +10,7 @@ email, password, extras, checkbox = input_area()
 if st.button("送信"):
     st.write("メールアドレス:", email)
     st.write("パスワード:", "●" * len(password))
-    st.write(checbox)
+    st.write(checkbox)
 
     if extras:
         st.write("追加情報:")
