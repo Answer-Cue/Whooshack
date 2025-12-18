@@ -44,20 +44,34 @@ if result and result.get("last_clicked"):
 # 送信
 # --------------------
 if st.button("送信"):
-    if not st.session_state.clicked_latlon:
-        st.warning("位置を選択してください")
-    else:
-        # ★ ここで全部まとめる
-        form_data = {
-            "email": email,
-            "password": password,
-            "extras": extras,
-            "checkbox": checkbox,
-            "latitude": st.session_state.clicked_latlon[0],
-            "longitude": st.session_state.clicked_latlon[1],
-        }
+    # --------------------
+    # 位置情報が必要か判定
+    # --------------------
+    if checkbox and not st.session_state.clicked_latlon:
+        st.warning("位置情報を有効にしている場合は、地図をクリックしてください")
+        st.stop()
 
-        # trader.py に渡す
-        trader.receive_form_data(form_data)
+    # --------------------
+    # trader.py に渡すデータ作成
+    # --------------------
+    form_data = {
+        "email": email,
+        "password": password,
+        "extras": extras,
+        "use_location": checkbox,
+        "latitude": (
+            st.session_state.clicked_latlon[0]
+            if checkbox and st.session_state.clicked_latlon
+            else None
+        ),
+        "longitude": (
+            st.session_state.clicked_latlon[1]
+            if checkbox and st.session_state.clicked_latlon
+            else None
+        ),
+    }
 
-        st.success("データを送信しました")
+    trader.receive_form_data(form_data)
+
+    st.success("送信しました")
+
