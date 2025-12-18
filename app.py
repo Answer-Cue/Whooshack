@@ -31,11 +31,15 @@ if st.session_state.clicked_latlon:
 
 result = st_folium(m, width=700, height=500)
 
-# 地図クリック時に session_state の lat/lon を更新
+# 地図クリック時に session_state を更新
 if result and result.get("last_clicked"):
-    st.session_state.clicked_latlon = [result["last_clicked"]["lat"], result["last_clicked"]["lng"]]
-    st.session_state["lat"] = str(result["last_clicked"]["lat"])
-    st.session_state["lon"] = str(result["last_clicked"]["lng"])
+    lat_click = str(result["last_clicked"]["lat"])
+    lon_click = str(result["last_clicked"]["lng"])
+    # Widgetに直接書き込む代わりに session_state を更新
+    st.session_state["lat"] = lat_click
+    st.session_state["lon"] = lon_click
+    st.session_state.clicked_latlon = [float(lat_click), float(lon_click)]
+
 
 # --------------------
 # 送信
