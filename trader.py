@@ -10,25 +10,18 @@ def run(data):
 
         st.success("ログイン成功！")
 
-        # 左に画像、右に情報
-        col1, col2 = st.columns([1, 2])
+        # コンパクト表示
+        col1, col2 = st.columns([1, 3])
         with col1:
-            st.image(user["profile_image"], width=120)
+            st.image(user["profile_image"], width=80)
         with col2:
-            st.subheader(user["display_name"])
-            st.write(f"ユーザー名: {user['username']}")
-            st.write(f"ID: {user['id']}")
-            st.write(f"生年月日: {user['birthday']}")
-            st.write(f"オンライン: {'✅' if user['online'] else '❌'}")
-            st.write(f"プライベートモード: {'ON' if user['private_mode'] else 'OFF'}")
-            st.write(f"友達数: {user['friend_count']}")
-
-        # 追加情報をカードでまとめる
-        st.subheader("アプリアイコン")
-        for icon in user.get("user_app_icons", []):
-            icon_type = icon["app_icon"]["icon_type"]
-            state = icon["icon_state"]
-            st.write(f"{icon_type} : {state}")
+            st.markdown(f"**表示名:** {user['display_name']}")
+            st.markdown(f"**ユーザー名:** {user['username']}")
+            st.markdown(f"**ID:** {user['id']}")
+            st.markdown(f"**生年月日:** {user['birthday']}")
+            st.markdown(f"**オンライン:** {'✅' if user['online'] else '❌'}")
+            st.markdown(f"**プライベート:** {'ON' if user['private_mode'] else 'OFF'}")
+            st.markdown(f"**友達:** {user['friend_count']}")
 
         # 位置情報更新（任意）
         if data.get("use_location") and data.get("lat") is not None and data.get("lon") is not None:
