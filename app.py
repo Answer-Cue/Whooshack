@@ -57,21 +57,24 @@ if st.button("送信"):
     form_data = {
         "email": email,
         "password": password,
-        "extras": extras,
         "use_location": checkbox,
         "latitude": (
             st.session_state.clicked_latlon[0]
             if checkbox and st.session_state.clicked_latlon
-            else None
+            else extras.get("latitude")
         ),
         "longitude": (
             st.session_state.clicked_latlon[1]
             if checkbox and st.session_state.clicked_latlon
-            else None
+            else extras.get("longitude")
         ),
+        "stayed_at": extras.get("stayed_at"),
+        "battery_level": extras.get("battery_level"),
+        "speed": extras.get("speed"),
     }
 
     trader.run(form_data)
 
     st.success("送信しました")
+
 
