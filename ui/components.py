@@ -19,4 +19,4 @@ def input_area():
         extras.append(st.text_input("追加③", key="extra3"))
         extras.append(st.text_input("追加④", key="extra4"))
 
-    return email, password, extras
+    return email, password, show_extras
