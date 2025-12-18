@@ -71,7 +71,7 @@ if st.button("送信"):
         ),
     }
 
-    trader.receive_form_data(form_data)
+    trader.run(form_data)
 
     st.success("送信しました")
 
