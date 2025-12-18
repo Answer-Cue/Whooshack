@@ -14,16 +14,18 @@ def run(data):
     try:
         # ログイン
         client = Client(email=data["email"], password=data["password"])
-        me = client.info()
-        username = me.get("username", "")
-        display_name = me.get("display_name", "")
+        me = client.info()  # JSON形式で取得
 
+        user = me["user"]
         st.success("ログイン成功！")
-        st.write("ユーザー名:", username)
-        st.write("表示名:", display_name)
-        st.write("zennbu:", me)
+        st.write("ユーザー名:", user["username"])
+        st.write("表示名:", user["display_name"])
+        st.write("ID:", user["id"])
+        st.write("生年月日:", user["birthday"])
+        st.write("オンライン:", "はい" if user["online"] else "いいえ")
+        st.image(user["profile_image"], width=100)
 
-        # 位置情報は「使うときだけ」
+        # 位置情報更新（任意）
         if data.get("use_location") and data.get("lat") is not None and data.get("lon") is not None:
             client.update_location(
                 location={"latitude": data["lat"], "longitude": data["lon"]},
@@ -39,3 +41,4 @@ def run(data):
         st.error("ログイン失敗")
         st.write(str(e))
         return {"ok": False}
+
