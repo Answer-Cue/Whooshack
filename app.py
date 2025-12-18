@@ -15,40 +15,43 @@ if st.button("送信"):
 
 st.subheader("地図")
 
-# 初期中心
-center = [35.68, 139.76]
+# --- 初期化（超重要） ---
+if "clicked_latlon" not in st.session_state:
+    st.session_state.clicked_latlon = None
 
-# クリック結果を保存
-clicked_latlon = None
+# 表示位置
+if st.session_state.clicked_latlon:
+    center = st.session_state.clicked_latlon
+    zoom = 13
+else:
+    center = [35.68, 139.76]
+    zoom = 10
 
-# 先に空の地図を作る
-m = folium.Map(location=center, zoom_start=10)
+# 地図作成
+m = folium.Map(location=center, zoom_start=zoom)
 
-# 表示 & クリック取得
+# ピンがあれば表示
+if st.session_state.clicked_latlon:
+    folium.Marker(
+        location=st.session_state.clicked_latlon,
+        popup="選択した位置",
+        icon=folium.Icon(color="red"),
+    ).add_to(m)
+
+# 地図表示 & クリック取得
 result = st_folium(
     m,
     width=700,
     height=500,
 )
 
-# クリックされたら
+# クリックされたら保存
 if result and result.get("last_clicked"):
     lat = result["last_clicked"]["lat"]
     lon = result["last_clicked"]["lng"]
-    clicked_latlon = [lat, lon]
 
-    st.success("位置が選択されました")
+    st.session_state.clicked_latlon = [lat, lon]
+
+    st.success("位置を更新しました")
     st.write("緯度:", lat)
     st.write("経度:", lon)
-    
-# 🔽 ピン付き地図を再描画
-if clicked_latlon:
-    m2 = folium.Map(location=clicked_latlon, zoom_start=13)
-
-    folium.Marker(
-        location=clicked_latlon,
-        popup="選択した位置",
-        icon=folium.Icon(color="red", icon="map-marker"),
-    ).add_to(m2)
-
-    st_folium(m2, width=700, height=500)
