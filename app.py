@@ -69,15 +69,16 @@ if st.button("送信"):
         st.stop()
 
     # trader に渡すデータ作成
+
     form_data = {
         "email": email,
         "password": password,
         "use_location": checkbox,
         "lat": float(lat_input) if lat_input else None,
         "lon": float(lon_input) if lon_input else None,
-        "stayed_at": extras[2] if len(extras) > 2 else None,
-        "battery_level": extras[3] if len(extras) > 3 else None,
-        "speed": extras[4] if len(extras) > 4 else None,
+        "stayed_at": extras[2] if len(extras) > 2 and extras[2] != "" else None,
+        "battery_level": extras[3] if len(extras) > 3 and extras[3] != "" else None,
+        "speed": extras[4] if len(extras) > 4 and extras[4] != "" else None,
     }
 
     trader.run(form_data)
