@@ -1,2 +1,6 @@
+streamlit
 streamlit-folium
 folium
+requests
+urllib3
+pydantic
