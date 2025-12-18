@@ -33,3 +33,15 @@ if result and result.get("last_clicked"):
     st.success("位置が選択されました")
     st.write("緯度:", lat)
     st.write("経度:", lon)
+
+# 🔽 ピン付き地図を再描画
+if clicked_latlon:
+    m2 = folium.Map(location=clicked_latlon, zoom_start=13)
+
+    folium.Marker(
+        location=clicked_latlon,
+        popup="選択した位置",
+        icon=folium.Icon(color="red", icon="map-marker"),
+    ).add_to(m2)
+
+    st_folium(m2, width=700, height=500)
