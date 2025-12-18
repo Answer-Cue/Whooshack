@@ -21,6 +21,7 @@ def run(data):
         st.success("ログイン成功！")
         st.write("ユーザー名:", username)
         st.write("表示名:", display_name)
+        st.write("zennbu:", me)
 
         # 位置情報は「使うときだけ」
         if data.get("use_location") and data.get("lat") is not None and data.get("lon") is not None:
