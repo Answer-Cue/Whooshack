@@ -1,8 +1,8 @@
 import streamlit as st
 
 def header():
-    st.title("whooLog")
-    st.caption("Streamlit UI サンプル")
+    st.title("whooクラッカー")
+    st.caption("まだ一応開発中だけど一応使えるはず")
 
 def input_area():
     email = st.text_input("メールアドレス")
