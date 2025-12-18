@@ -12,6 +12,7 @@ email, password, extras, checkbox = input_area()
 if st.button("送信"):
     st.write("メールアドレス:", email)
     st.write("パスワード:", "●" * len(password))
+    st.write(lat)
 
 st.subheader("地図")
 
