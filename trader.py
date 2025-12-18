@@ -1,5 +1,5 @@
 # trader.py
-from whoomain.src.WhooPy.client import Client, BatteryState
+from WhooPy.client import Client, BatteryState
 
 def run(data):
     """
