@@ -4,72 +4,65 @@ from streamlit_folium import st_folium
 import folium
 import trader
 
-# --------------------
-# ページ設定
-# --------------------
 st.set_page_config(page_title="Whooshack", layout="centered")
 header()
 
-# --------------------
-# 入力フォーム
-# --------------------
+# 入力フォーム取得
 email, password, extras, checkbox = input_area()
 
 # --------------------
-# セッションステート初期化
+# 状態初期化
 # --------------------
 if "clicked_latlon" not in st.session_state:
     st.session_state.clicked_latlon = None
 
 # --------------------
-# 地図表示
+# 地図
 # --------------------
 st.subheader("地図")
 center = st.session_state.clicked_latlon or [35.68, 139.76]
 zoom = 13 if st.session_state.clicked_latlon else 10
-
 m = folium.Map(location=center, zoom_start=zoom)
+
 if st.session_state.clicked_latlon:
-    folium.Marker(
-        location=st.session_state.clicked_latlon,
-        icon=folium.Icon(color="red")
-    ).add_to(m)
+    folium.Marker(location=st.session_state.clicked_latlon, icon=folium.Icon(color="red")).add_to(m)
 
-# 地図クリックの結果を取得
 result = st_folium(m, width=700, height=500)
+
+# 地図クリックで session_state 更新
 if result and result.get("last_clicked"):
-    lat_click = result["last_clicked"]["lat"]
-    lon_click = result["last_clicked"]["lng"]
-    # テキストボックスに反映する
-    st.session_state.lat = str(lat_click)
-    st.session_state.lon = str(lon_click)
-    st.session_state.clicked_latlon = [lat_click, lon_click]
+    st.session_state.clicked_latlon = [result["last_clicked"]["lat"], result["last_clicked"]["lng"]]
+    # テキストボックスの初期値に反映（すでに extras にある場合は書き換えない）
+    if "latitude" in extras and not extras["latitude"]:
+        extras["latitude"] = str(result["last_clicked"]["lat"])
+    if "longitude" in extras and not extras["longitude"]:
+        extras["longitude"] = str(result["last_clicked"]["lng"])
 
 # --------------------
-# 緯度経度テキストボックス
+# 緯度・経度のテキストボックスを表示（編集可能）
 # --------------------
-lat_input = st.text_input("緯度", value=st.session_state.get("lat", ""))
-lon_input = st.text_input("経度", value=st.session_state.get("lon", ""))
+lat_input = st.text_input("緯度 (自由に変更可能)", value=extras.get("latitude", ""), key="lat")
+lon_input = st.text_input("経度 (自由に変更可能)", value=extras.get("longitude", ""), key="lon")
 
 # --------------------
 # 送信ボタン
 # --------------------
 if st.button("送信"):
-    # 位置情報ONだがテキストボックスが空なら警告
-    if checkbox and (not lat_input or not lon_input):
-        st.warning("位置情報を有効にする場合は、緯度・経度を入力してください")
+    # 位置情報が必要かチェック
+    if checkbox and not (lat_input and lon_input):
+        st.warning("位置情報を有効にしている場合は、緯度経度を入力してください")
         st.stop()
 
-    # trader.py に渡すデータ
+    # trader.py に渡すデータ作成
     form_data = {
         "email": email,
         "password": password,
         "use_location": checkbox,
-        "lat": lat_input if lat_input else None,
-        "lon": lon_input if lon_input else None,
-        "stayed_at": extras[2] if len(extras) > 2 else None,
-        "battery_level": extras[3] if len(extras) > 3 else None,
-        "speed": extras[4] if len(extras) > 4 else None,
+        "lat": float(lat_input) if lat_input else None,
+        "lon": float(lon_input) if lon_input else None,
+        "stayed_at": extras.get("stayed_at"),
+        "battery_level": extras.get("battery_level"),
+        "speed": extras.get("speed"),
     }
 
     trader.run(form_data)
