@@ -5,11 +5,12 @@ st.set_page_config(page_title="Whooshack", layout="centered")
 
 header()
 
-email, password, extras = input_area()
+email, password, extras, checkbox = input_area()
 
 if st.button("送信"):
     st.write("メールアドレス:", email)
     st.write("パスワード:", "●" * len(password))
+    st.write(checbox)
 
     if extras:
         st.write("追加情報:")
