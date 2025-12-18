@@ -1,4 +1,4 @@
-# trader.py
+import streamlit as st
 from WhooPy.client import Client, BatteryState
 
 def run(data):
@@ -11,31 +11,30 @@ def run(data):
         "lon": float | None,
     }
     """
+    try:
+        # ログイン
+        client = Client(email=data["email"], password=data["password"])
+        me = client.info()
+        username = me.get("username", "")
+        display_name = me.get("display_name", "")
 
-    # ① ここで必ずログインする
-    client = Client(
-        email=data["email"],
-        password=data["password"],
-    )
+        st.success("ログイン成功！")
+        st.write("ユーザー名:", username)
+        st.write("表示名:", display_name)
 
-    # ② ログイン成功確認（任意）
-    me = client.info()
-    print("ログイン成功:", me.get("username"))
-
-    # ③ 位置情報は「使うときだけ」
-    if data.get("use_location"):
-        if data.get("lat") is not None and data.get("lon") is not None:
+        # 位置情報は「使うときだけ」
+        if data.get("use_location") and data.get("lat") is not None and data.get("lon") is not None:
             client.update_location(
-                location={
-                    "latitude": data["lat"],
-                    "longitude": data["lon"],
-                },
+                location={"latitude": data["lat"], "longitude": data["lon"]},
                 state=BatteryState.CHARGING,
             )
-        else:
-            print("位置情報ONだが座標が未選択")
+            st.info(f"位置情報更新: 緯度 {data['lat']}, 経度 {data['lon']}")
+        elif data.get("use_location"):
+            st.warning("位置情報ONだが座標が未選択")
 
-    return {
-        "ok": True,
-        "used_location": data.get("use_location", False),
-    }
+        return {"ok": True}
+
+    except Exception as e:
+        st.error("ログイン失敗")
+        st.write(str(e))
+        return {"ok": False}
