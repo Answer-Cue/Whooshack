@@ -20,6 +20,23 @@ def show_profile(user: dict):
         st.markdown(f"**プライベート:** {'ON' if user.get('private_mode') else 'OFF'}")
         st.markdown(f"**友達:** {user.get('friend_count')}")
 
+def show_friends(friends: list):
+    """友達情報をコンパクトに表示"""
+    if not friends:
+        st.info("友達はいません")
+        return
+
+    st.subheader("友達リスト")
+    for friend in friends:
+        col1, col2 = st.columns([1, 3])
+        with col1:
+            st.image(friend.get("profile_image"), width=50)
+        with col2:
+            st.markdown(f"**表示名:** {friend.get('display_name')}")
+            st.markdown(f"**ユーザー名:** {friend.get('username')}")
+            st.markdown(f"**オンライン:** {'✅' if friend.get('online') else '❌'}")
+
+
 def run(data: dict):
     """
     メインループとして動作。
@@ -55,6 +72,15 @@ def run(data: dict):
                 st.warning("位置情報ONだが座標が未選択")
                 
         return {"ok": True, "used_location": data.get("use_location", False)}
+
+        # 友達情報取得
+        try:
+            friends_data = client.get_friends()
+            friends_list = [v["user"] for k, v in friends_data.items()]
+            show_friends(friends_list)
+        except Exception as e:
+            st.warning(f"友達情報の取得に失敗しました: {e}")
+
 
     except Exception as e:
         st.error(f"ログインまたは処理中にエラーが発生: {e}")
