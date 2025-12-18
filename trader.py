@@ -1,7 +1,6 @@
 from WhooPy.client import Client, BatteryState
 import streamlit as st
 
-# 自分のプロフィールカードを表示
 def show_my_profile_card(me):
     user = me["user"]
     with st.container():
@@ -18,7 +17,6 @@ def show_my_profile_card(me):
             st.write(f"- 自己紹介: {user.get('introduction') or 'なし'}")
         st.markdown("---")
 
-# 友達カードを表示
 def show_friends_cards(friends_data, cols_per_row=3):
     friends = friends_data.get("friends", [])
     st.subheader(f"友達一覧 ({len(friends)})")
@@ -33,63 +31,37 @@ def show_friends_cards(friends_data, cols_per_row=3):
                 st.write(f"- フレンドシップID: {friend.get('friendship', {}).get('id')}")
                 st.markdown("---")
 
-# メイン処理
 def run(data):
-    """
-    data = {
-        "email": str,
-        "password": str,
-        "use_location": bool,
-        "lat": str or float or None,
-        "lon": str or float or None,
-        "stayed_at": str or None,
-        "battery_level": str or None,
-        "speed": str or None,
-    }
-    """
     try:
-        # --------------------
         # ログイン
-        # --------------------
         client = Client(email=data["email"], password=data["password"])
         me = client.info()
         st.success("ログイン成功！")
         show_my_profile_card(me)
 
-        # --------------------
         # 友達情報取得
-        # --------------------
         friends = client.get_friends()
         show_friends_cards(friends)
 
-        # --------------------
         # 位置情報更新
-        # --------------------
         if data.get("use_location"):
-            lat = data.get("lat")
-            lon = data.get("lon")
-            if lat and lon:
-                location = {"latitude": float(lat), "longitude": float(lon)}
+            if data.get("lat") is not None and data.get("lon") is not None:
+                location = {"latitude": float(data["lat"]), "longitude": float(data["lon"])}
                 client.update_location(location=location, state=BatteryState.CHARGING)
                 st.write(f"位置情報更新: {location}")
             else:
                 st.warning("位置情報ONだが座標が未選択")
 
-        # --------------------
         # 追加情報の反映
-        # --------------------
         stayed_at = data.get("stayed_at")
         battery_level = data.get("battery_level")
         speed = data.get("speed")
+
         if stayed_at or battery_level or speed:
             st.write("追加情報を反映:")
-            if stayed_at:
-                st.write(f"- 滞在時間: {stayed_at}")
-            if battery_level:
-                st.write(f"- バッテリー残量: {battery_level}")
-            if speed:
-                st.write(f"- 移動スピード: {speed}")
+            if stayed_at: st.write(f"- 滞在時間: {stayed_at}")
+            if battery_level: st.write(f"- バッテリー残量: {battery_level}")
+            if speed: st.write(f"- 移動スピード: {speed}")
 
     except Exception as e:
         st.error(f"ログイン失敗: {e}")
-
