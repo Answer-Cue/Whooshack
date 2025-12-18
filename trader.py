@@ -1,2 +1,3 @@
 class runling:
-  print("HI")
+  def test(word):
+    print(word)
