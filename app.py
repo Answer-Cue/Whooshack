@@ -14,18 +14,23 @@ email, password, extras, checkbox = input_area()
 # 状態初期化
 # --------------------
 if "clicked_latlon" not in st.session_state:
-    st.session_state.clicked_latlon = None
+    st.session_state.clicked_latlon = [35.68, 139.76]  # 初期地図位置
+if "lat" not in st.session_state:
+    st.session_state.lat = ""
+if "lon" not in st.session_state:
+    st.session_state.lon = ""
 
 # --------------------
 # 地図
 # --------------------
 st.subheader("地図")
-center = st.session_state.clicked_latlon or [35.68, 139.76]
-zoom = 13 if st.session_state.clicked_latlon else 10
+center = st.session_state.clicked_latlon
+zoom = 13 if st.session_state.clicked_latlon != [35.68, 139.76] else 10
 
 m = folium.Map(location=center, zoom_start=zoom)
 
-if st.session_state.clicked_latlon:
+# 既にクリックした場所があればマーカー
+if st.session_state.clicked_latlon != [35.68, 139.76]:
     folium.Marker(
         location=st.session_state.clicked_latlon,
         icon=folium.Icon(color="red"),
@@ -33,23 +38,20 @@ if st.session_state.clicked_latlon:
 
 result = st_folium(m, width=700, height=500)
 
-# クリック位置をセッションステートに保存
+# 地図クリックで更新
 if result and result.get("last_clicked"):
-    st.session_state.clicked_latlon = [
-        result["last_clicked"]["lat"],
-        result["last_clicked"]["lng"],
-    ]
+    lat_click = result["last_clicked"]["lat"]
+    lon_click = result["last_clicked"]["lng"]
+    st.session_state.clicked_latlon = [lat_click, lon_click]
+    st.session_state.lat = str(lat_click)
+    st.session_state.lon = str(lon_click)
 
 # --------------------
-# 地図からの緯度経度入力
+# 緯度・経度テキストボックス
 # --------------------
 st.subheader("緯度・経度")
-lat_input = st.text_input(
-    "緯度", value=str(st.session_state.clicked_latlon[0]) if st.session_state.clicked_latlon else ""
-)
-lon_input = st.text_input(
-    "経度", value=str(st.session_state.clicked_latlon[1]) if st.session_state.clicked_latlon else ""
-)
+lat_input = st.text_input("緯度", value=st.session_state.lat, key="lat")
+lon_input = st.text_input("経度", value=st.session_state.lon, key="lon")
 
 # --------------------
 # 送信
@@ -77,6 +79,5 @@ if st.button("送信"):
     }
 
     trader.run(form_data)
-
     st.success("送信しました")
 
