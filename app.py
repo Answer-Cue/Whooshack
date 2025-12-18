@@ -1,7 +1,7 @@
 import streamlit as st
 from ui.components import header, input_area
 from streamlit.components.v1 import html
-import trader
+
 
 st.set_page_config(page_title="Whooshack", layout="centered")
 
