@@ -21,7 +21,8 @@ if st.button("送信"):
 st.divider()
 st.subheader("地図から位置を選択")
 
-location = map_component()
+location = map_component(key="map", height=600)
+
 
 if location:
     st.success("位置情報を受信しました")
