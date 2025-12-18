@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        #profile-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+            width: 200px;
+        }
+        #profile-container img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: block;
+            margin-bottom: 5px;
+        }
+        #profile-container .name {
+            font-weight: bold;
+        }
+        #profile-container .username {
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+    <div id="profile-container">
+        {% if user.profile_image %}
+        <img src="{{ user.profile_image }}" alt="icon">
+        {% endif %}
+        <div class="name">{{ user.display_name }}</div>
+        <div class="username">@{{ user.username }}</div>
+    </div>
+    <div id="map" style="height:100vh;"></div>
+    <script>
+        const map = L.map('map').setView([0, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        let myMarker = null;
+
+        function addUserMarker(lat, lng, name, id, iconUrl) {
+            const icon = L.icon({
+                iconUrl: iconUrl,
+                iconSize: [40, 40]
+            });
+            const marker = L.marker([lat, lng], { icon: icon }).addTo(map);
+            marker.bindPopup(name + ' (' + id + ')');
+        }
+
+        function loadLocations() {
+            fetch('/locations').then(r => r.json()).then(data => {
+                Object.values(data).forEach(loc => {
+                    const u = loc.user;
+                    addUserMarker(parseFloat(loc.latitude), parseFloat(loc.longitude), u.display_name, u.id, u.profile_image);
+                });
+            });
+        }
+        loadLocations();
+
+        function sendLocation(lat, lng) {
+            const f = new FormData();
+            f.append('lat', lat);
+            f.append('lon', lng);
+            fetch('/update_location', { method: 'POST', body: f }).then(r => {
+                if (r.ok) {
+                    alert('位置情報を更新しました');
+                }
+            });
+            if (myMarker) { map.removeLayer(myMarker); }
+            myMarker = L.marker([lat, lng]).addTo(map);
+        }
+
+        map.on('click', function (e) {
+            sendLocation(e.latlng.lat, e.latlng.lng);
+        });
+    </script>
+</body>
+</html>
