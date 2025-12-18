@@ -1,5 +1,6 @@
 import streamlit as st
 from ui.components import header, input_area
+import trader
 
 st.set_page_config(page_title="Whooshack", layout="centered")
 
@@ -16,3 +17,5 @@ if st.button("送信"):
         st.write("追加情報:")
         for i, ex in enumerate(extras, 1):
             st.write(f"{i}:", ex)
+
+trader.
