@@ -1,3 +1,5 @@
+import streamlit as st
+
 def receive_form_data(data: dict):
     """
     data に全部入ってくる想定
