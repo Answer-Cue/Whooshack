@@ -41,8 +41,16 @@ if result and result.get("last_clicked"):
 # --------------------
 # 緯度・経度のテキストボックスを表示（編集可能）
 # --------------------
-lat_input = st.text_input("緯度 (自由に変更可能)", value=extras.get("latitude", ""), key="lat")
-lon_input = st.text_input("経度 (自由に変更可能)", value=extras.get("longitude", ""), key="lon")
+# 緯度経度テキストボックス
+lat_input = st.text_input("緯度 (自由に変更可能)", value="", key="lat")
+lon_input = st.text_input("経度 (自由に変更可能)", value="", key="lon")
+
+# 地図クリック時にテキストボックスに反映
+if result and result.get("last_clicked"):
+    clicked = result["last_clicked"]
+    lat_input = st.session_state.lat = str(clicked["lat"])
+    lon_input = st.session_state.lon = str(clicked["lng"])
+
 
 # --------------------
 # 送信ボタン
