@@ -13,8 +13,6 @@ def input_area():
     extras = {}
     if show_extra:
         st.subheader("追加情報")
-        extras["latitude"] = st.text_input("緯度", key="extra_lat")
-        extras["longitude"] = st.text_input("経度", key="extra_lon")
         extras["stayed_at"] = st.text_input("滞在時間", key="extra_stayed")
         extras["battery_level"] = st.text_input("バッテリー残量", key="extra_battery")
         extras["speed"] = st.text_input("移動スピード", key="extra_speed")
