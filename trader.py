@@ -32,8 +32,19 @@ def show_friends_cards(friends_data, cols_per_row=3):
                 st.markdown("---")
 
 def run(data):
+    """
+    data = {
+        "email": str,
+        "password": str,
+        "use_location": bool,
+        "latitude": float | None,
+        "longitude": float | None,
+        "stayed_at": str | None,
+        "battery_level": str | None,
+        "speed": str | None,
+    }
+    """
     try:
-        # ログイン
         client = Client(email=data["email"], password=data["password"])
         me = client.info()
         st.success("ログイン成功！")
@@ -43,27 +54,31 @@ def run(data):
         friends = client.get_friends()
         show_friends_cards(friends)
 
-        # 位置情報・追加情報の更新
+        # 位置情報はチェックボックスがオンのときだけ反映
         if data.get("use_location"):
-            location = None
-            if data.get("latitude") and data.get("longitude"):
-                location = {"latitude": float(data["latitude"]), "longitude": float(data["longitude"])}
-            if location:
-                client.update_location(location=location, state=BatteryState.CHARGING)
-                st.write(f"位置情報更新: {location}")
+            lat = data.get("latitude")
+            lon = data.get("longitude")
+            if lat is not None and lon is not None:
+                client.update_location(
+                    location={"latitude": float(lat), "longitude": float(lon)},
+                    state=BatteryState.CHARGING,
+                )
+                st.write(f"位置情報を更新: 緯度 {lat}, 経度 {lon}")
             else:
                 st.warning("位置情報ONだが座標が未選択")
 
-        # 追加情報（滞在時間・バッテリー・速度）を反映する例
-        stayed_at = data.get("stayed_at")
-        battery_level = data.get("battery_level")
-        speed = data.get("speed")
+        # 追加情報の反映（滞在時間・バッテリー・移動速度）
+        if data.get("use_location"):
+            stayed_at = data.get("stayed_at")
+            battery_level = data.get("battery_level")
+            speed = data.get("speed")
 
-        if stayed_at or battery_level or speed:
-            st.write("追加情報を反映:")
-            if stayed_at: st.write(f"- 滞在時間: {stayed_at}")
-            if battery_level: st.write(f"- バッテリー残量: {battery_level}")
-            if speed: st.write(f"- 移動スピード: {speed}")
+            if stayed_at or battery_level or speed:
+                st.write("追加情報を反映:")
+                if stayed_at: st.write(f"- 滞在時間: {stayed_at}")
+                if battery_level: st.write(f"- バッテリー残量: {battery_level}")
+                if speed: st.write(f"- 移動スピード: {speed}")
 
     except Exception as e:
         st.error(f"ログイン失敗: {e}")
+
