@@ -27,10 +27,7 @@ zoom = 13 if st.session_state.clicked_latlon else 10
 m = folium.Map(location=center, zoom_start=zoom)
 
 if st.session_state.clicked_latlon:
-    folium.Marker(
-        location=st.session_state.clicked_latlon,
-        icon=folium.Icon(color="red"),
-    ).add_to(m)
+    folium.Marker(location=st.session_state.clicked_latlon, icon=folium.Icon(color="red")).add_to(m)
 
 result = st_folium(m, width=700, height=500)
 
@@ -44,9 +41,6 @@ if result and result.get("last_clicked"):
 # 送信
 # --------------------
 if st.button("送信"):
-    # --------------------
-    # 位置情報が必要か判定
-    # --------------------
     if checkbox and not st.session_state.clicked_latlon:
         st.warning("位置情報を有効にしている場合は、地図をクリックしてください")
         st.stop()
@@ -58,23 +52,14 @@ if st.button("送信"):
         "email": email,
         "password": password,
         "use_location": checkbox,
-        "latitude": (
-            st.session_state.clicked_latlon[0]
-            if checkbox and st.session_state.clicked_latlon
-            else extras.get("latitude")
-        ),
-        "longitude": (
-            st.session_state.clicked_latlon[1]
-            if checkbox and st.session_state.clicked_latlon
-            else extras.get("longitude")
-        ),
-        "stayed_at": extras.get("stayed_at"),
-        "battery_level": extras.get("battery_level"),
-        "speed": extras.get("speed"),
+        "latitude": st.session_state.clicked_latlon[0] if st.session_state.clicked_latlon else (extras[0] if len(extras) > 0 else None),
+        "longitude": st.session_state.clicked_latlon[1] if st.session_state.clicked_latlon else (extras[1] if len(extras) > 1 else None),
+        "stayed_at": extras[2] if len(extras) > 2 else None,
+        "battery_level": extras[3] if len(extras) > 3 else None,
+        "speed": extras[4] if len(extras) > 4 else None,
     }
 
     trader.run(form_data)
-
     st.success("送信しました")
 
 
