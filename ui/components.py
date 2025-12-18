@@ -14,8 +14,8 @@ def input_area():
 
     if show_extra:
         st.subheader("追加情報")
-        extras.append(st.text_input("追加①", key="extra1"))
-        extras.append(st.text_input("追加②", key="extra2"))
+        extras.append(st.text_input("緯度", key="extra1"))
+        extras.append(st.text_input("経度", key="extra2"))
         extras.append(st.text_input("追加③", key="extra3"))
         extras.append(st.text_input("追加④", key="extra4"))
 
