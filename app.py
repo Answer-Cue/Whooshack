@@ -18,4 +18,4 @@ if st.button("送信"):
         for i, ex in enumerate(extras, 1):
             st.write(f"{i}:", ex)
 
-trader.
+trader.runling
