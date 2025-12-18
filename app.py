@@ -53,7 +53,7 @@ lon_input = st.text_input("経度 (自由に変更可能)", value=st.session_sta
 # --------------------
 # 送信
 # --------------------
-if st.button("偽装実行"):
+if st.button("実行!"):
     form_data = {
         "email": email,
         "password": password,
