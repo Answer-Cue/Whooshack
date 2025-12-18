@@ -13,10 +13,11 @@ def input_area():
     extras = []
 
     if show_extra:
-        st.subheader("追加情報")
+        st.subheader("変更入力")
         extras.append(st.text_input("緯度", key="extra1"))
         extras.append(st.text_input("経度", key="extra2"))
-        extras.append(st.text_input("追加③", key="extra3"))
-        extras.append(st.text_input("追加④", key="extra4"))
+        extras.append(st.text_input("滞在時間", key="extra3"))
+        extras.append(st.text_input("バッテリー残量", key="extra4"))
+        extras.append(st.text_input("移動スピード", key="extra4"))
 
     return email, password,extras, show_extra
