@@ -33,30 +33,27 @@ def show_friends_cards(friends_data, cols_per_row=3):
 
 def run(data):
     try:
-        # ログイン
         client = Client(email=data["email"], password=data["password"])
         me = client.info()
         st.success("ログイン成功！")
         show_my_profile_card(me)
 
-        # 友達情報取得
         friends = client.get_friends()
         show_friends_cards(friends)
 
         # 位置情報更新
         if data.get("use_location"):
-            if data.get("lat") is not None and data.get("lon") is not None:
-                location = {"latitude": float(data["lat"]), "longitude": float(data["lon"])}
+            if data.get("latitude") is not None and data.get("longitude") is not None:
+                location = {"latitude": float(data["latitude"]), "longitude": float(data["longitude"])}
                 client.update_location(location=location, state=BatteryState.CHARGING)
                 st.write(f"位置情報更新: {location}")
             else:
                 st.warning("位置情報ONだが座標が未選択")
 
-        # 追加情報の反映
+        # 追加情報反映
         stayed_at = data.get("stayed_at")
         battery_level = data.get("battery_level")
         speed = data.get("speed")
-
         if stayed_at or battery_level or speed:
             st.write("追加情報を反映:")
             if stayed_at: st.write(f"- 滞在時間: {stayed_at}")
