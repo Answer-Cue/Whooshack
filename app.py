@@ -5,67 +5,71 @@ import folium
 import trader
 
 st.set_page_config(page_title="Whooshack", layout="centered")
-
 header()
 
 email, password, extras, show_extra = input_area()
 
 # --------------------
-# 状態初期化
+# 初期化
 # --------------------
 if "clicked_latlon" not in st.session_state:
-    st.session_state.clicked_latlon = None
+    st.session_state.clicked_latlon = [None, None]
+
+if "lat_input" not in st.session_state:
+    st.session_state.lat_input = extras.get("lat", "")
+if "lon_input" not in st.session_state:
+    st.session_state.lon_input = extras.get("lon", "")
 
 # --------------------
-# 地図表示
+# 地図
 # --------------------
 st.subheader("地図")
-
-center = st.session_state.clicked_latlon or [35.68, 139.76]
-zoom = 13 if st.session_state.clicked_latlon else 10
+center = st.session_state.clicked_latlon if all(st.session_state.clicked_latlon) else [35.68, 139.76]
+zoom = 13 if all(st.session_state.clicked_latlon) else 10
 
 m = folium.Map(location=center, zoom_start=zoom)
 
-# クリック位置にマーカー
-if st.session_state.clicked_latlon:
+if all(st.session_state.clicked_latlon):
     folium.Marker(
         location=st.session_state.clicked_latlon,
         icon=folium.Icon(color="red"),
     ).add_to(m)
 
-# Folium マップを描画
 result = st_folium(m, width=700, height=500)
 
-# クリック時に session_state を更新
+# クリック時にウィジェットの初期値を更新
 if result and result.get("last_clicked"):
     lat_click = str(result["last_clicked"]["lat"])
     lon_click = str(result["last_clicked"]["lng"])
-    st.session_state["lat"] = lat_click
-    st.session_state["lon"] = lon_click
+    st.session_state.lat_input = lat_click
+    st.session_state.lon_input = lon_click
     st.session_state.clicked_latlon = [float(lat_click), float(lon_click)]
 
 # --------------------
-# 送信ボタン処理
+# 緯度経度テキストボックス
+# --------------------
+if show_extra:
+    st.text_input("緯度", key="lat_input")
+    st.text_input("経度", key="lon_input")
+
+# --------------------
+# 送信
 # --------------------
 if st.button("送信"):
-    # 位置情報チェック
-    if show_extra and (not extras["lat"] or not extras["lon"]):
-        st.warning("位置情報を有効にしている場合は、地図をクリックするか緯度経度を入力してください")
-        st.stop()
-
-    # trader.py に渡すデータ作成
     form_data = {
         "email": email,
         "password": password,
         "use_location": show_extra,
-        "lat": float(extras["lat"]) if extras["lat"] else None,
-        "lon": float(extras["lon"]) if extras["lon"] else None,
+        "lat": float(st.session_state.lat_input) if st.session_state.lat_input else None,
+        "lon": float(st.session_state.lon_input) if st.session_state.lon_input else None,
         "stayed_at": extras.get("stayed_at"),
         "battery_level": extras.get("battery_level"),
         "speed": extras.get("speed"),
     }
 
     trader.run(form_data)
+    st.success("送信しました")
+
 
     st.success("送信しました")
 
