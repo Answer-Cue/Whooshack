@@ -10,14 +10,14 @@ def input_area():
 
     show_extra = st.checkbox("追加情報を入力する")
 
-    extras = []
+    extras = {}
 
     if show_extra:
         st.subheader("変更入力")
-        extras.append(st.text_input("緯度", key="extra1"))
-        extras.append(st.text_input("経度", key="extra2"))
-        extras.append(st.text_input("滞在時間", key="extra3"))
-        extras.append(st.text_input("バッテリー残量", key="extra4"))
-        extras.append(st.text_input("移動スピード", key="extra4"))
+        extras["latitude"] = st.text_input("緯度", key="lat")
+        extras["longitude"] = st.text_input("経度", key="lon")
+        extras["stayed_at"] = st.text_input("滞在時間", key="stayed_at")
+        extras["battery_level"] = st.text_input("バッテリー残量", key="battery_level")
+        extras["speed"] = st.text_input("移動スピード", key="speed")
 
-    return email, password,extras, show_extra
+    return email, password, extras, show_extra
