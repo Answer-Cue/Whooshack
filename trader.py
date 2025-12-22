@@ -38,7 +38,8 @@ def run(data):
     try:
         client = Client(email=data["email"], password=data["password"])
         me = client.info()
-        st.write(me.get_locations())
+        st.write(client)
+        
         st.success("ログイン成功！")
         st.write(me)
         show_my_profile_card(me)
