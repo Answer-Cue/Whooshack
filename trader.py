@@ -39,6 +39,7 @@ def run(data):
         client = Client(email=data["email"], password=data["password"])
         me = client.info()
         st.success("ログイン成功！")
+        st.write(me)
         show_my_profile_card(me)
 
         friends = client.get_friends()
