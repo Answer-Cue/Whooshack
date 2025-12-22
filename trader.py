@@ -30,6 +30,9 @@ def show_friends_cards(friends_data, cols_per_row=3):
                 st.write(f"- オンライン: {friend.get('online')}")
                 st.write(f"- フレンドシップID: {friend.get('friendship', {}).get('id')}")
                 st.markdown("---")
+                st.write(friend)
+                st.markdown("---")
+
 
 def run(data):
     try:
