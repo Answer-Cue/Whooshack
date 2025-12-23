@@ -38,7 +38,7 @@ def run(data):
     try:
         client = Client(email=data["email"], password=data["password"])
         me = client.info()
-        st.write(client.get_locations())
+        st.write(client.get_locations("llelmorell"))
         
         st.success("ログイン成功！")
     
