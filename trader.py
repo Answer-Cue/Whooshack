@@ -51,6 +51,8 @@ def run(data):
             apptmp=[]
             apptmp.append(forcus["latitude"])
             apptmp.append(forcus["longitude"])
+            apptmp.append(forcus["stayed_at"])
+            apptmp.append(forcus["speed"])
             st.write(friendsinfo[i])
             friendscondition.append(apptmp)
             
