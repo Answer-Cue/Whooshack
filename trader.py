@@ -50,6 +50,7 @@ def run(data):
             forcus=friendsinfo[i]
             apptmp=[]
             apptmp.append(forcus["latitude"])
+            apptmp.append(forcus["longitude"])
             st.write(friendsinfo[i])
             friendscondition.append(apptmp)
             
