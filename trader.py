@@ -53,6 +53,11 @@ def run(data):
             apptmp.append(forcus["longitude"])
             apptmp.append(forcus["stayed_at"])
             apptmp.append(forcus["speed"])
+            apptmp.append(forcus["horizontal_accuracy"])
+            apptmp.append(forcus["device"])
+            apptmp.append(forcus["spot"])
+            apptmp.append(forcus["pano"])
+            
             st.write(friendsinfo[i])
             friendscondition.append(apptmp)
             
