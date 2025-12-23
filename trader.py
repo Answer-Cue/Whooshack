@@ -44,8 +44,16 @@ def run(data):
         for i in friendsinfo:
             friendsuserid.append(i)
 
+        friendscondition=[]
+
         for i in friendsuserid:
-            st.write(friendsinfo[i]["latitude"])
+            forcus=friendsinfo[i]
+            apptmp=[]
+            apptmp.append(forcus["latitude"])
+            st.write(friendsinfo[i])
+            friendscondition.append(apptmp)
+            
+        st.write(friendscondition)
             
         
         st.success("ログイン成功！")
