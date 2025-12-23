@@ -45,7 +45,7 @@ def run(data):
             friendsuserid.append(i)
 
         for i in friendsuserid:
-            st.write(friendsinfo[i])
+            st.write(friendsinfo[i]["latitude"])
             
         
         st.success("ログイン成功！")
