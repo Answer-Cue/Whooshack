@@ -40,8 +40,13 @@ def run(data):
         me = client.info()
 
         friendsinfo =client.get_locations()
+        friendsuserid=[]
         for i in friendsinfo:
-            st.write(i)
+            friendsuserid.append(i)
+
+        for i in friendsuserid:
+            st.write(friendsinfo[i])
+            
         
         st.success("ログイン成功！")
     
