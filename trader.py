@@ -55,7 +55,7 @@ def run(data):
             apptmp.append(forcus["speed"])
             apptmp.append(forcus["horizontal_accuracy"])
             apptmp.append(forcus["device"])
-            apptmp.append(forcus["spot"])
+            apptmp.append(forcus["user"])
             apptmp.append(forcus["pano"])
             
             st.write(friendsinfo[i])
